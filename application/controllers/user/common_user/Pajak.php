@@ -193,32 +193,36 @@ class Pajak extends CI_Controller {
 
 
 	function kriteriaChecker($data){
-
+			$totalpajak = 0;
 			$batasatas1 = 50000000;
 			$batasatas2 = 250000000;
 			$batasatas3 = 500000000;
-			$kriteria1 = (float) 50000000 * 0.05 ;
-			$kriteria2 = (float) (($data-$batasatas1) * 0.15) ;
-			$kriteria3 = (float) (($data-$batasatas1-$batasatas2) * 0.25) ;
-			$kriteria4 = (float) (($data-$batasatas1-$batasatas2-$batasatas3) * 0.3);	
-			if($data > 500000000){
+			$kriteria1 = (float) ($batasatas1 * 0.05);
+			$kriteria2 = (float) ($batasatas2 * 0.15);
+			$kriteria3 = (float) ($batasatas3 * 0.25);
+
 			
-				return $kriteria1+$kriteria2+$kriteria3+$kriteria4;
+			if($data >= 800000000){
+			
+				return $kriteria1 + $kriteria2 + $kriteria3 + (float) (($data-800000000)  * 0.3); 
+			
+			}else if($data >= 300000000){
+				return $kriteria1 + $kriteria2 + (float) (($data-300000000)  * 0.25);
+			}else if($data >= 50000000){
+				return $kriteria1 + (float) (($data-50000000)  * 0.15);
+			}else{
+				return (float) ($data * 0.5);
 			}
-			if(($data > 250000000) && $data <=500000000){
-				return $kriteria1+$kriteria2 +$kriteria3;
-					
-			}
-			if(($data>50000000) && $data <=250000000){
-						
-				return $kriteria1+$kriteria2 ;
-				
-			}
-			if(($data > 0) &&  $data<=50000000){
-				// $kriteria1 = 50000000 * 5%;
-				return $kriteria1;
-				
-			}	
+
+			return $totalpajak;
+
+
+
+
+			
+
+
+
 	}
 
 }
