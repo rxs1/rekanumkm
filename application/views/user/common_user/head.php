@@ -21,6 +21,7 @@
     <link href="<?=base_url()?>public/assets/admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="<?=base_url()?>public/assets/admin/plugin/datepicker/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
+   
      <!-- datatable -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">

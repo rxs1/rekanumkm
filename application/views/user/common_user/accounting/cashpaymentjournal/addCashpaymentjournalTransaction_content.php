@@ -18,7 +18,7 @@
                                 <i class="fa fa-calculator "></i> <a href="<?=base_url()?>user/common_user/akuntansi/<?=$store['store_id']?>">Akuntasi</a>
                             </li>
                               <li>
-                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnal_pembelian/<?=$store['store_id']?>/2">Jurnal Pengembalian Kas</a>
+                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnal_pembelian/<?=$store['store_id']?>/2">Jurnal Pengeluaran Kas</a>
                             </li>
 
                              <li>
@@ -212,7 +212,7 @@ $('#sel1').change(function () {
         
         success: function(data)
         {
-            var options="";
+            var options="<option>Pilih Terlebih Dahulu Tipe Transaksi</option>";
             var i = 0;
 
            for (i=0;i<data.length;i++){

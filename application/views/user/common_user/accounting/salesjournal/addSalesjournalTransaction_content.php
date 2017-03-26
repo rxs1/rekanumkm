@@ -69,6 +69,8 @@
                             <label for="pwd">Transaksi Secara</label>
                             <select class="form-control" name="paymentmethod_id" id="sel1">
                              <option value="1">Tunai</option>
+                             <option value="2">Transfer Bank</option>
+                             <option value="3">Kredit </option>
                             </select>
                           </div>
                           <div class="form-group">

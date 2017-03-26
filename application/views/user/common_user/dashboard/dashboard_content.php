@@ -128,10 +128,10 @@
                       <div id="<?=$list['store_id']?>" class="collapse"  >
                           <center>
                               <p>
-                                  <a href="<?=base_url()?>user/common_user/akuntansi/<?=$list['store_id']?>" class="btn btn-primary" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-calculator "></i> Akuntansi</a>
-                                  <a href="##" class="btn btn-success" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-money "></i> Keuangan</a>
-                                  <a href="##" class="btn btn-warning" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-percent"></i> Pajak</a>
-                                    <a href="##" class="btn btn-warning" style="padding: 3%;text-align: center;margin-top: 3%"><i class="fa fa-book "></i> Laporan</a>
+                                  <a href="<?=base_url()?>user/common_user/akuntansi/<?=$list['store_id']?>" class="btn btn-primary" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-calculator "></i> Pencatatan Jurnal</a>
+                                  <a href="<?=base_url()?>user/common_user/keuangan/ratio/<?=$list['store_id']?>" class="btn btn-success" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-money "></i> Keuangan</a>
+                                  <a href="<?=base_url()?>user/common_user/pajak/pajak_konten/<?=$list['store_id']?>" class="btn btn-warning" style="padding: 3%;text-align: center;margin-top: 3%"> <i class="fa fa-percent"></i> Pajak</a>
+                                    
                                     <br>
                                     <a href="<?=base_url()?>user/common_user/umkm/edit?umkm_id=<?=$list['store_id']?>" class="btn btn-default" style="padding: 3%;text-align: center;margin-top: 3%; background-color: orange;color: #fff"> <i class="fa fa-cog" aria-hidden="true"></i> Personalize</a>
                                     <a href="<?=base_url()?>user/common_user/umkm/delete?umkm_id=<?=$list['store_id']?>" class="btn btn-danger" style="padding: 3%;text-align: center;margin-top: 3%"  <a href="url_to_delete" onclick="return confirm('Semua data akan hilang dan tidak bisa di recovery. Apakah anda yakin ingin menghapus data ini? ?');"> <i class="fa fa-trash" aria-hidden="true"></i> Hapus</a>

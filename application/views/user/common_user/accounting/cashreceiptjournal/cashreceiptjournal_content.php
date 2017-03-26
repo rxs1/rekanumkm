@@ -18,7 +18,7 @@
                                 <i class="fa fa-calculator "></i> <a href="<?=base_url()?>user/common_user/akuntansi/<?=$store['store_id']?>">Akuntasi</a>
                             </li>
                               <li>
-                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnalPenjualan/<?=$store['store_id']?>/3">Jurnal Penjualan</a>
+                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnalPenerimaanKas/<?=$store['store_id']?>/4">Jurnal Penerimaan Kas</a>
                             </li>
                            
                         </ol>
@@ -27,7 +27,7 @@
                 <!-- /.row -->
                 <div class="row" style="margin: 100px">
                     <div class="col-md-3"> 
-                         <a href="<?=base_url()?>user/common_user/akuntansi/tambahTransaksijurnalPenjualan/<?=$store['store_id']?>/3"><button style="margin-bottom: 20px" class="btn btn-danger btn-lg col-md-12">+ Tambah Transaksi</button></a>
+                         <a href="<?=base_url()?>user/common_user/akuntansi/tambahTransaksiJurnalPenerimaanKas/<?=$store['store_id']?>/4"><button style="margin-bottom: 20px" class="btn btn-danger btn-lg col-md-12">+ Tambah Transaksi</button></a>
                     </div>
                     <div class="col-md-12">
                      <?php
@@ -54,24 +54,21 @@
                               <tr>
                                 <th>Create On</th>
                                 <th>Deskripsi</th>
-                                 <th>Penjualan</th>
-                                <th>Harga jual ke konsumen</th>
-                                <th>Harga beli ke supplier</th>
-                              
+                                <th>Nominal</th>
+                                <th>Tipe Transaksi</th>
+                                <th>Tujuan Transaksi</th>
                                 <th>Transaksi Secara</th>
                                 <th>Tanggal Jurnal</th>
-                                
                                 <th>Action</th>
                               </tr>
                           </thead>
                               <?php 
-                              if($salesjournals){
-                              foreach ($salesjournals as $list){
-                                  $button_tindakan=" 
+                              if($cashreceiptjournals){
+                              foreach ($cashreceiptjournals as $list){
+                                  $button_tindakan="
+                             <a href ='".base_url()."user/common_user/akuntansi/editTransaksiJurnalPenerimaanKas/".$store['store_id']."/".$list['journal_id']."/4'  class='btn btn-success' ><i class='glyphicon glyphicon-edit'></i></a> 
 
-                             <a href ='".base_url()."user/common_user/akuntansi/editTransaksiJurnalPenjualan/".$store['store_id']."/".$list['journal_id']."/3'  class='btn btn-success' ><i class='glyphicon glyphicon-edit'></i></a> 
-
-                             <a onClick='return confirm(\"Anda yakin ingin hapus data ini\")' href ='".base_url()."user/common_user/akuntansi/jurnal_pembelian/hapus/".$list['journal_id']."' class='btn btn-danger'><i class='glyphicon glyphicon-trash'></i></a> 
+                             <a onClick='return confirm(\"Anda yakin ingin hapus data ini\")' href ='".base_url()."user/common_user/akuntansi/jurnal_pengeluaran_kas/hapus/".$list['journal_id']."' class='btn btn-danger'><i class='glyphicon glyphicon-trash'></i></a> 
                              ";
                                 ?>
                                 <tr>
@@ -86,6 +83,9 @@
                                       <?=$list['description']?>
                                     </td>
                                     <td>
+                                       <?=$list['nominal']?>
+                                    </td>
+                                       <td>
                                        <?php
                                        
                                          echo $transactioncategory_obj->getNameById($list['transactioncategory_id']);
@@ -93,17 +93,21 @@
                                        ?>
                                     </td>
                                     <td>
-                                       <?=$list['nominal']?>
-                                    </td>
-                                    <td>
-                                       <?=$list['nominal_2nd']?>
-                                    </td>
+                                       <?php
                                        
+                                         echo $subtransactioncategory_obj->getNameById($list['subtransactioncategory_id']);
+
+                                       ?>
+                                    </td>
                                        <td>
                                         <?php
-                                       
-                                        
-                                       echo $paymentmethod_obj->getNameById($list['paymentmethod_id']);
+                                          if($list['paymentmethod_id']){
+                                            echo $paymentmethod_obj->getNameById($list['paymentmethod_id']);
+                                          }else{
+                                            echo "-";
+                                          }
+                                         
+              
                                        ?>
                                     </td>
                                     <td>

@@ -53,6 +53,8 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['user/common_user/akuntansi/(:num)'] = 'user/common_user/akuntansi/allJurnal/$1';
+
+$route['user/common_user/bukubesar/(:num)'] = 'user/common_user/bukubesar/semuaBukubesar/$1';
 //---AJAX PROSES HTML---//
 
 

@@ -59,7 +59,6 @@
                                 <th>Tujuan Transaksi</th>
                                 <th>Transaksi Secara</th>
                                 <th>Tanggal Jurnal</th>
-                                
                                 <th>Action</th>
                               </tr>
                           </thead>

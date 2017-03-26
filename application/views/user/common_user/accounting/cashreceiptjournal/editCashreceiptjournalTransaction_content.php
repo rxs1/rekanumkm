@@ -18,11 +18,11 @@
                                 <i class="fa fa-calculator "></i> <a href="<?=base_url()?>user/common_user/akuntansi/<?=$store['store_id']?>">Akuntasi</a>
                             </li>
                               <li>
-                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnalPenjualan/<?=$store['store_id']?>/3">Jurnal Penjualan</a>
+                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/jurnalPenerimaanKas/<?=$store['store_id']?>/2">Jurnal Penerimaan Kas</a>
                             </li>
 
                              <li>
-                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/editTransaksiJurnalPenjualan/<?=$store['store_id']?>/<?=$journal['journal_id']?>/<?=$journal['journaltype_id']?>">Edit Transaksi</a>
+                                <i class="fa fa-book "></i> <a href="<?=base_url()?>user/common_user/akuntansi/tambahTransaksiJurnalPenerimaanKas/<?=$store['store_id']?>">Edit Transaksi</a>
                             </li>
                            
                         </ol>
@@ -50,60 +50,60 @@
                               $this->session->unset_userdata('message'); 
 
                         ?>
-                        <form method="POST" action="<?=base_url()?>user/common_user/akuntansi/editTransaksiJurnalPenjualan_proses/<?=$journal['journal_id']?>">
+                        <form method="POST" action="<?=base_url()?>user/common_user/akuntansi/editTransaksijurnalPenerimaanKas_proses/<?=$journal['journal_id']?>">
                           <div class="form-group">
                             <label for="email">Deskripsi Trasansaksi</label>
                             <textarea  class='form-control' name="description" placeholder="Isi Keterangan" required><?=$journal['description']?></textarea>
                           </div>
                           <div class="form-group">
                             <label for="pwd">Tipe Transaksi</label>
-                            <select class="form-control" name="transactioncategory_id" id="sel1">
-                              <?php foreach ($transactioncategory as $list) {
+                            <select class="form-control" name="transactioncategory_id" id="sel1" required>
+                             <option disabled value> -- Pilih Tipe Transaksi -- </option>
+                               <?php foreach ($transactioncategory as $list) {
                                 ?>
-                                    <option 
-                                    <?php if ($journal['transactioncategory_id'] == $list['transactioncategory_id'] ) echo 'selected' ; ?>
-                                    value="<?=$list['transactioncategory_id']?>"><?=$list['name']?></option>
+                                    <option <?php if ($journal['transactioncategory_id'] == $list['transactioncategory_id'] ) echo 'selected' ; ?>  value="<?=$list['transactioncategory_id']?>"><?=$list['name']?></option>
                              <?php }?>
                              
                             </select>
                           </div>
+
                           <div class="form-group">
-                            <label for="pwd">Transaksi Secara</label>
-                            <select class="form-control" name="paymentmethod_id" id="sel1">
-                             <option  
-                                    <?php if ($journal['paymentmethod_id'] ==1 ) echo 'selected' ; ?> value="1">Tunai</option>
-              							 <option
+                            <label for="pwd" id="lbl2">Tujuan Transaksi</label>
+                            <select class="form-control" name="subtransactioncategory_id"  id="sel2">
+                               <?php foreach ($subtransactioncategory as $list) {
+                                ?>
+                                    <option <?php if ($journal['subtransactioncategory_id'] == $list['subtransactioncategory_id'] ) echo 'selected' ; ?>  value="<?=$list['subtransactioncategory_id']?>"><?=$list['name']?>
+                                      
+                                    </option>
+                             <?php }?>  
+                            </select>
+                          </div>
 
-                                    <?php if ($journal['paymentmethod_id'] ==2 ) echo 'selected' ; ?>
 
-                              value="2">Transfer Bank</option>
-              							 <option 
-
-
-                                    <?php if ($journal['paymentmethod_id'] == 3 ) echo 'selected' ; ?>
-                             value="3">Kredit</option>
+                          <div class="form-group">
+                            <label for="pwd" id="lbl3">Transaksi Secara</label>
+                            <select class="form-control" name="paymentmethod_id" 
+                             id="sel3">
+                               <?php foreach ($paymentmethods as $list) {
+                                ?>
+                                    <option <?php if ($journal['paymentmethod_id'] == $list['paymentmethod_id'] ) echo 'selected' ; ?>  value="<?=$list['paymentmethod_id']?>"><?=$list['name']?></option>
+                             <?php }?>
                             </select>
                           </div>
                           <div class="form-group">
                                   <label for="dtp_input2">Tanggal Pencatatan</label>
                                   <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                      <input value="<?=$journal['journal_date']?>"  class="form-control" size="16" name="journal_date" type="text"  readonly>
+                                      <input value="<?=$journal['journal_date']?>" class="form-control" size="16" name="journal_date" type="text"  readonly>
                                       <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                           </div>
+                                  
                               </div>
                           <div class="form-group">
-                               <label for="email">Nominal Harga Jual Barang</label>
-                            <input  value="<?=$journal['nominal']?>" onkeydown="converting()" onkeyup="converting()" onkeypress="converting()" type="number" id="price" class="form-control" name="nominal">
+                               <label for="email">Nominal</label>
+                            <input value="<?=$journal['nominal']?>" onkeydown="converting()" onkeyup="converting()" onkeypress="converting()" type="number" id="price" class="form-control" name="nominal">
                             <br><br>
                             <center><p id="convert_value" class="alert alert-info" style="width: 100%; height: 50px">Masukkan Nominal Transaksi</p></center>
-                          </div>
-
-                          <div class="form-group">
-                               <label for="email">Nominal Harga Beli di Supplier</label>
-                            <input value="<?=$journal['nominal_2nd']?>"  onkeydown="converting2()" onkeyup="converting2()" onkeypress="converting2()" type="number" id="price2" class="form-control" name="nominal_2nd">
-                            <br><br>
-                            <center><p id="convert_value2" class="alert alert-info" style="width: 100%; height: 50px">Masukkan Nominal Transaksi</p></center>
                           </div>
                          
                           <button type="submit" class="btn btn-danger btn-lg">Simpan Perubahan Transaksi</button>
@@ -182,18 +182,6 @@ function converting() {
   
 }
 
-function converting2() {
-
-    var y = document.getElementById("price2").value;
-    var x = document.getElementById("convert_value2");
-    if(y == ''){
-      x.innerHTML ='Masukkan Nominal Transaksi !';
-    }else{
-      x.innerHTML = convertToRupiah(y);
-    }
-  
-}
-
    
   $('.form_date').datetimepicker({
         language:  'fr',
@@ -206,6 +194,91 @@ function converting2() {
     forceParse: 0
     });
 
+
+$('#sel1').change(function () {
+    var id = $(this).val();
+       
+       
+    $("#sel2").html("-");
+    $("#sel3").html("-");
+    $("#sel2").hide(); 
+    $("#sel3").hide();
+    $("#lbl2").hide(); 
+    $("#lbl3").hide();
+    $.ajax({
+
+        
+        type: 'POST',
+        
+        url: 'http://localhost/rekanumkm/user/common_user/ajax/getAllSubTransactionCategoryByTransactionCategoryId',
+        
+        data: {
+             'transactioncategory_id': id
+        },
+
+        crossDomain: false,
+        
+        dataType: 'json',
+        
+        cache: false,
+        
+        success: function(data)
+        {
+            var options=" <option disabled selected value> -- Pilih Tujuan Transaksi -- </option>";
+            var i = 0;
+
+           for (i=0;i<data.length;i++){
+              options += "<option value='"+data[i]['subtransactioncategory_id']+"'>"+data[i]['name']+"</option>" ;
+            }
+
+
+              $("#sel2").html(options);
+              $("#sel2").fadeIn();
+               $("#lbl2").fadeIn(); 
+        },
+        error: function (request, status, error) {
+            console.log(error);
+        }
+    });
+
+});
+
+  $('#sel2').change(function () {
+      var id = $(this).val();
+       
+      $.ajax({
+          type: 'POST',
+          url: 'http://localhost/rekanumkm/user/common_user/ajax/getAllPaymentmethodBySubTransactionCategoryId',
+          data: {
+              'subtransactioncategory_id': id
+          },
+          crossDomain: false,
+          dataType: 'json',
+          cache: false,
+          success: function(data)
+          {
+              if(data.length>0){
+                 var options=" <option disabled selected value> -- Pilih -- </option>";
+              var i = 0;
+
+             for (i=0;i<data.length;i++){
+                options += "<option value='"+data[i]['paymentmethod_id']+"'>"+data[i]['name']+"</option>"; 
+              }
+
+
+                $("#sel3").html(options);
+                $("#sel3").fadeIn();
+                $("#lbl3").fadeIn();
+              }
+             
+                
+          },
+          error: function (request, status, error) {
+              console.log(error);
+          }
+      });
+
+  });
 
  
     </script>

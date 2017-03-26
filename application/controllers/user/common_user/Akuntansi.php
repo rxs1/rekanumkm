@@ -58,7 +58,10 @@ class Akuntansi extends CI_Controller {
 	public function jurnalPembelian($store_id,$journaltype_id)
 	{	
 		
-		
+		if($journaltype_id != 1){ // kalau id bukan punya pembelian
+			header("location:javascript://history.go(-1)");
+				  		exit();
+		}
 		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
 		$data['user'] = json_decode(json_encode($data['user']), True);
 		$data['store'] = $this->store->get($store_id);
@@ -267,6 +270,10 @@ class Akuntansi extends CI_Controller {
 
 	 public function jurnalPengeluaranKas($store_id,$journaltype_id)
 	{	
+				if($journaltype_id != 2){ // kalau id bukan punya Pengeluaran KAs
+			header("location:javascript://history.go(-1)");
+				  		exit();
+		}
 		
 		
 		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
@@ -308,8 +315,8 @@ class Akuntansi extends CI_Controller {
 	{	
 		$this->form_validation->set_message('required', 'harus diisi');
 	   	$this->form_validation->set_rules('description', 'Deskripsi Transaksi', 'required');
-	   	$this->form_validation->set_rules('transactioncategory_id', 'Tipe Pembelian', 'required');
-	   	$this->form_validation->set_rules('transactioncategory_id', 'Tipe Pembelian', 'required');
+	   	$this->form_validation->set_rules('transactioncategory_id', 'Tipe Transaksi', 'required');
+	  
 	   	$this->form_validation->set_rules('paymentmethod_id', 'Transaksi Secara', 'required');
 	   	$this->form_validation->set_rules('nominal', 'Nominal', 'required');
         $this->form_validation->set_rules('journal_date', 'Tanggal Pencatatan', 'required');       
@@ -504,6 +511,10 @@ public function editTransaksijurnalPengeluaranKas_proses($journal_id)
 
 	 public function jurnalPenjualan($store_id,$journaltype_id)
 	{	
+				if($journaltype_id != 3){ // kalau id bukan punya Penjualan
+			header("location:javascript://history.go(-1)");
+				  		exit();
+		}
 		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
 		$data['user'] = json_decode(json_encode($data['user']), True);
 		$data['store'] = $this->store->get($store_id);
@@ -513,6 +524,7 @@ public function editTransaksijurnalPengeluaranKas_proses($journal_id)
 		$data['salesjournals'] = json_decode(json_encode($data['salesjournals']), True);
 
 		$data['transactioncategory_obj'] = $this->transactioncategory;
+		$data['paymentmethod_obj'] = $this->paymentmethod;
 		$data['title']= 'Jurnal Pembelian Untuk : '.$data['store']['name'] ; 
 
 		$this->load->view('user/common_user/head',$data);
@@ -639,7 +651,6 @@ public function editTransaksijurnalPengeluaranKas_proses($journal_id)
 
 	 	if($this->form_validation->run() == TRUE){
 	 		$data_x=$this->input->post();
-	 		;
 	 		
 		  	if($this->journal->update($journal_id,$data_x)){
 		  		$data = array('status'=>true,'message'=>'Sukses Edit data.','notif_code'=>'edit');
@@ -693,7 +704,420 @@ public function editTransaksijurnalPengeluaranKas_proses($journal_id)
 		}
 
 	}
+
+	public function jurnalPenerimaanKas($store_id,$journaltype_id)
+	{	
+
+				if($journaltype_id != 4){ // kalau id bukan punya Penerimaan Kas
+			header("location:javascript://history.go(-1)");
+				  		exit();
+		}
+
+		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['cashreceiptjournals'] = $this->journal->getByStoreIdAndJournalTypeId($store_id,$journaltype_id);
+		
+		$data['cashreceiptjournals'] = json_decode(json_encode($data['cashreceiptjournals']), True);
+
+
+		$data['transactioncategory_obj'] = $this->transactioncategory;
+		$data['subtransactioncategory_obj'] = $this->subtransactioncategory;
+		$data['paymentmethod_obj'] = $this->paymentmethod;
+
+		$data['title']= 'Jurnal Penerimaan Kas Untuk : '.$data['store']['name'] ; 
+
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/cashreceiptjournal/cashreceiptjournal_content',$data);
+	}
+
+	public function tambahTransaksijurnalPenerimaanKas($store_id,$journaltype_id)
+	{	
+		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['transactioncategory'] = $this->transactioncategory-> getAllJournalTypeId($journaltype_id);
+		$data['transactioncategory'] = json_decode(json_encode($data['transactioncategory']), True);
+		
+		$data['title']= 'Tambah Jurnal Penerimaan Kas Untuk : '.$data['store']['name'] ; 
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/cashreceiptjournal/addCashreceiptjournalTransaction_content',$data);
+	}
 	
+	public function tambahTransaksiJurnalPenerimaanKas_proses($store_id)
+	{	
+		
+	   $this->form_validation->set_message('required', 'harus diisi');
+	   $this->form_validation->set_rules('description', 'Deskripsi Transaksi', 'required');
+	   $this->form_validation->set_rules('transactioncategory_id', 'Tipe Pembelian', 'required');
+	   
+	   $this->form_validation->set_rules('nominal', 'Nominal', 'required');
+       
+
+	 	if($this->form_validation->run() == TRUE){
+	 		$data_x=$this->input->post();
+	 		
+	 		$data_x['store_id']=$store_id ;
+	 		$data_x['journaltype_id']=4;//tipe penerimaan
+	 		
+		  	if($this->journal->insert($data_x)){
+		  		$data = array('status'=>true,'message'=>'Sukses Tambah data.','notif_code'=>'add');
+		  		$this->session->set_userdata($data);
+		  		redirect(base_url().'user/common_user/akuntansi/jurnalPenerimaanKas/'.$store_id.'/4');
+
+			  }else{
+			  	$data = array('status'=>false,'message'=>'Gagal tambah data.','notif_code'=>'add');
+		  		$this->session->set_userdata($data);
+		  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }
+		  
+		}else{
+			$error= $this->form_validation->error_array();
+			$error= json_decode(json_encode($error), True);	
+			$errors='<br>';
+			foreach ($error as $key => $value) {
+				if($key=='description'){
+					$key = 'Deskripsi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tipe Pembelian';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='paymentmethod_id'){
+					$key = 'Transaksi Secara';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='nominal'){
+					$key = 'Nominal';
+					$errors.=$key.' '.$value.'<br>';
+				}
+			}
+			
+			$data = array('status'=>false,'message'=>$errors,'notif_code'=>'add');
+	  		$this->session->set_userdata($data);
+	  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+		}
+
+	}
+
+	public function editTransaksijurnalPenerimaanKas($store_id,$journal_id,$journaltype_id)
+	{	
+		$data['user']= $this->user->getByUsername($this->session->userdata('username'));
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['journal'] = $this->journal->get($journal_id);
+		$data['journal'] = json_decode(json_encode($data['journal']), True);
+		$data['transactioncategory'] = $this->transactioncategory-> getAllJournalTypeId($journaltype_id);
+		$data['transactioncategory'] = json_decode(json_encode($data['transactioncategory']), True);
+		$data['subtransactioncategory'] = $this->subtransactioncategory->getAllTransactioncategoryId($data['journal']['transactioncategory_id']);
+		$data['subtransactioncategory'] = json_decode(json_encode($data['subtransactioncategory']), True);
+		$paymentmethod = $this->subtransactioncategory->getPaymentmethodsById($data['journal']['subtransactioncategory_id']);
+		$paymentmethod = json_decode(json_encode($paymentmethod), True);
+		$paymentmethod = json_decode($paymentmethod['paymentmethods']);
+		$paymentmethods =array();
+		$data_y = array();
+
+		foreach ($paymentmethod as $list) {	
+			$tmp = $this->paymentmethod->get($list);
+  			$tmp = json_decode(json_encode($tmp), True);
+  			$data_y['paymentmethod_id'] = $tmp['paymentmethod_id'];
+  			$data_y['name']=$tmp['name'];
+  			$paymentmethods[] = $data_y;
+  		}	
+
+		$data['paymentmethods'] = $paymentmethods;	
+		
+		$data['title']= 'Edit` Jurnal Penerimaan Kas Untuk : '.$data['store']['name'] ; 
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/cashreceiptjournal/editCashreceiptjournalTransaction_content',$data);
+
+	}
+
+	public function editTransaksijurnalPenerimaanKas_proses($journal_id)
+	{	
+		$this->form_validation->set_message('required', 'harus diisi');
+	   	$this->form_validation->set_rules('description', 'Deskripsi Transaksi', 'required');
+	   	$this->form_validation->set_rules('transactioncategory_id', 'Tipe Transaksi', 'required');
+	   	$this->form_validation->set_rules('subtransactioncategory_id', 'Tujuan Transaksi', 'required');
+	   	$this->form_validation->set_rules('paymentmethod_id', 'Transaksi Secara', 'required');
+	   	$this->form_validation->set_rules('nominal', 'Nominal', 'required');
+        $this->form_validation->set_rules('journal_date', 'Tanggal Pencatatan', 'required');       
+
+	 	if($this->form_validation->run() == TRUE){
+	 		$data_x=$this->input->post();
+		  	if($this->journal->update($journal_id,$data_x)){
+		  		$data = array('status'=>true,'message'=>'Sukses edit data.','notif_code'=>'edit');
+		  		$this->session->set_userdata($data);
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }else{
+			  	$data = array('status'=>false,'message'=>'Gagal edit data.','notif_code'=>'edit');
+		  		$this->session->set_userdata($data);
+		  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }
+		  
+		}else{
+			$error= $this->form_validation->error_array();
+			$error= json_decode(json_encode($error), True);	
+			$errors='<br>';
+			foreach ($error as $key => $value) {
+				if($key=='description'){
+					$key = 'Deskripsi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tipe Transaksi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tujuan Transaksi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='paymentmethod_id'){
+					$key = 'Transaksi Secara';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='nominal'){
+					$key = 'Nominal';
+					$errors.=$key.' '.$value.'<br>';
+				}
+			}
+			
+			$data = array('status'=>false,'message'=>$errors,'notif_code'=>'add');
+	  		$this->session->set_userdata($data);
+	  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+		} 
+	}
+
+
+	public function jurnalModal($store_id,$journaltype_id)
+	{	
+				if($journaltype_id != 5){ // kalau id bukan punya Modal
+			header("location:javascript://history.go(-1)");
+				  		exit();
+		}
+		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['capitaljournals'] = $this->journal->getByStoreIdAndJournalTypeId($store_id,$journaltype_id);
+		
+		$data['capitaljournals'] = json_decode(json_encode($data['capitaljournals']), True);
+
+
+		$data['transactioncategory_obj'] = $this->transactioncategory;
+		$data['subtransactioncategory_obj'] = $this->subtransactioncategory;
+		$data['paymentmethod_obj'] = $this->paymentmethod;
+		$data['title']= 'Jurnal Penerimaan Kas Untuk : '.$data['store']['name'] ; 
+
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/capitaljournal/capitaljournal_content',$data);
+	}
+
+
+	public function tambahTransaksijurnalModal($store_id,$journaltype_id)
+	{	
+		$data['user']= $this->user->getByUsername($this->session->userdata('username')); 
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['transactioncategory'] = $this->transactioncategory-> getAllJournalTypeId($journaltype_id);
+		$data['transactioncategory'] = json_decode(json_encode($data['transactioncategory']), True);
+		
+		$data['title']= 'Tambah Jurnal Modal Untuk : '.$data['store']['name'] ; 
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/capitaljournal/addCapitaljournalTransaction_content',$data);
+	}
+
+
+	public function tambahTransaksiJurnalModal_proses($store_id)
+	{	
+		
+	   $this->form_validation->set_message('required', 'harus diisi');
+	   $this->form_validation->set_rules('description', 'Deskripsi Transaksi', 'required');
+	   $this->form_validation->set_rules('transactioncategory_id', 'Tipe Pembelian', 'required');
+	   
+	   $this->form_validation->set_rules('nominal', 'Nominal', 'required');
+       
+
+	 	if($this->form_validation->run() == TRUE){
+	 		$data_x=$this->input->post();
+	 		
+	 		$data_x['store_id']=$store_id ;
+	 		$data_x['journaltype_id']=5;//tipe penerimaan
+	 		
+		  	if($this->journal->insert($data_x)){
+		  		$data = array('status'=>true,'message'=>'Sukses Tambah data.','notif_code'=>'add');
+		  		$this->session->set_userdata($data);
+		  		redirect(base_url().'user/common_user/akuntansi/jurnalModal/'.$store_id.'/5');
+
+			  }else{
+			  	$data = array('status'=>false,'message'=>'Gagal tambah data.','notif_code'=>'add');
+		  		$this->session->set_userdata($data);
+		  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }
+		  
+		}else{
+			$error= $this->form_validation->error_array();
+			$error= json_decode(json_encode($error), True);	
+			$errors='<br>';
+			foreach ($error as $key => $value) {
+				if($key=='description'){
+					$key = 'Deskripsi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tipe Pembelian';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='paymentmethod_id'){
+					$key = 'Transaksi Secara';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='nominal'){
+					$key = 'Nominal';
+					$errors.=$key.' '.$value.'<br>';
+				}
+			}
+			
+			$data = array('status'=>false,'message'=>$errors,'notif_code'=>'add');
+	  		$this->session->set_userdata($data);
+	  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+		}
+
+	}
+
+
+
+	public function editTransaksijurnalModal($store_id,$journal_id,$journaltype_id)
+	{	
+		$data['user']= $this->user->getByUsername($this->session->userdata('username'));
+		$data['user'] = json_decode(json_encode($data['user']), True);
+		$data['store'] = $this->store->get($store_id);
+		$data['store'] = json_decode(json_encode($data['store']), True);
+		$data['journal'] = $this->journal->get($journal_id);
+		$data['journal'] = json_decode(json_encode($data['journal']), True);
+		$data['transactioncategory'] = $this->transactioncategory-> getAllJournalTypeId($journaltype_id);
+
+		$data['transactioncategory'] = json_decode(json_encode($data['transactioncategory']), True);
+		$data['subtransactioncategory'] = $this->subtransactioncategory->getAllTransactioncategoryId($data['journal']['transactioncategory_id']);
+		$data['subtransactioncategory'] = json_decode(json_encode($data['subtransactioncategory']), True);
+		$paymentmethod = $this->subtransactioncategory->getPaymentmethodsById($data['journal']['subtransactioncategory_id']);
+		$paymentmethod = json_decode(json_encode($paymentmethod), True);
+		$paymentmethod = json_decode($paymentmethod['paymentmethods']);
+		$paymentmethods =array();
+		$data_y = array();
+
+		foreach ($paymentmethod as $list) {	
+			$tmp = $this->paymentmethod->get($list);
+  			$tmp = json_decode(json_encode($tmp), True);
+  			$data_y['paymentmethod_id'] = $tmp['paymentmethod_id'];
+  			$data_y['name']=$tmp['name'];
+  			$paymentmethods[] = $data_y;
+  		}	
+
+		$data['paymentmethods'] = $paymentmethods;	
+		
+		$data['title']= 'Edit Tranksaksi Jurnal Modal Untuk : '.$data['store']['name'] ; 
+		$this->load->view('user/common_user/head',$data);
+		$this->load->view('user/common_user/header',$data);
+		$this->load->view('user/common_user/accounting/capitaljournal/editCapitaljournalTransaction_content',$data);
+
+	}
+
+
+	public function editTransaksijurnalModal_proses($journal_id)
+	{	
+		$this->form_validation->set_message('required', 'harus diisi');
+	   	$this->form_validation->set_rules('description', 'Deskripsi Transaksi', 'required');
+	   	$this->form_validation->set_rules('transactioncategory_id', 'Tipe Transaksi', 'required');
+	   	$this->form_validation->set_rules('subtransactioncategory_id', 'Tujuan Transaksi', 'required');
+	   	$this->form_validation->set_rules('paymentmethod_id', 'Transaksi Secara', 'required');
+	   	$this->form_validation->set_rules('nominal', 'Nominal', 'required');
+        $this->form_validation->set_rules('journal_date', 'Tanggal Pencatatan', 'required');       
+
+	 	if($this->form_validation->run() == TRUE){
+	 		$data_x=$this->input->post();
+		  	if($this->journal->update($journal_id,$data_x)){
+		  		$data = array('status'=>true,'message'=>'Sukses edit data.','notif_code'=>'edit');
+		  		$this->session->set_userdata($data);
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }else{
+			  	$data = array('status'=>false,'message'=>'Gagal edit data.','notif_code'=>'edit');
+		  		$this->session->set_userdata($data);
+		  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+			  }
+		  
+		}else{
+			$error= $this->form_validation->error_array();
+			$error= json_decode(json_encode($error), True);	
+			$errors='<br>';
+			foreach ($error as $key => $value) {
+				if($key=='description'){
+					$key = 'Deskripsi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tipe Transaksi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='transactioncategory_id'){
+					$key = 'Tujuan Transaksi';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+				if($key=='paymentmethod_id'){
+					$key = 'Transaksi Secara';
+					$errors.=$key.' '.$value.'<br>';
+				}
+
+
+				if($key=='nominal'){
+					$key = 'Nominal';
+					$errors.=$key.' '.$value.'<br>';
+				}
+			}
+			
+			$data = array('status'=>false,'message'=>$errors,'notif_code'=>'add');
+	  		$this->session->set_userdata($data);
+	  		header('Location: ' . $_SERVER['HTTP_REFERER']);
+				  		exit();
+		} 
+	}
 
 
 
